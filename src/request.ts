@@ -3,7 +3,7 @@ import { message } from 'ant-design-vue'
 
 // 创建 Axios 实例
 const myAxios = axios.create({
-  baseURL: '',
+  baseURL: 'http://localhost:8123',
   timeout: 60000,
   withCredentials: true,
 })
@@ -19,7 +19,6 @@ myAxios.interceptors.request.use(
     return Promise.reject(error)
   },
 )
-
 // 全局响应拦截器
 myAxios.interceptors.response.use(
   function (response) {
@@ -28,8 +27,8 @@ myAxios.interceptors.response.use(
     if (data.code === 40100) {
       // 不是获取用户信息的请求，并且用户目前不是已经在用户登录页面，则跳转到登录页面
       if (
-        !response.request.responseURL.includes('user.ts/get/login') &&
-        !window.location.pathname.includes('/user.ts/login')
+        !response.request.responseURL.includes('user/get/login') &&
+        !window.location.pathname.includes('/user/login')
       ) {
         message.warning('请先登录')
         window.location.href = `/user/login?redirect=${window.location.href}`
