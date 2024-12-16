@@ -72,6 +72,16 @@ const originItems = [
     title: '用户管理',
   },
   {
+    key: '/admin/pictureManage',
+    label: '图片管理',
+    title: '图片管理',
+  },
+  {
+    key: '/picture/addPicture',
+    label: '创建图片',
+    title: '创建图片',
+  },
+  {
     key: 'others',
     label: h('a', { href: 'https://github.com/HuangGreatd', target: '_blank' }, 'Github'),
     title: 'Github',
