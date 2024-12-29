@@ -16,8 +16,13 @@
         <a-input-password v-model:value="formState.userPassword" placeholder="请输入密码" />
       </a-form-item>
       <div class="tips">
-        没有账号？
-        <RouterLink to="/user/register">去注册</RouterLink>
+        <div style="display: flex; justify-content: space-between">
+          <RouterLink to="/user/qrcodeLogin">扫码登录</RouterLink>
+          <div>
+            没有账号？
+            <RouterLink to="/user/register">去注册</RouterLink>
+          </div>
+        </div>
       </div>
       <a-form-item>
         <a-button type="primary" html-type="submit" style="width: 100%">登录</a-button>
@@ -82,6 +87,5 @@ const handleSubmit = async (values: any) => {
   margin-bottom: 16px;
   color: #bbb;
   font-size: 13px;
-  text-align: right;
 }
 </style>

@@ -9,6 +9,7 @@ import UserPersonPage from '@/page/user/UserPersonPage.vue'
 import AddPicturePage from '@/page/picture/AddPicturePage.vue'
 import PictureManagePage from '@/page/admin/PictureManagePage.vue'
 import DetailPicturePage from '@/page/picture/DetailPicturePage.vue'
+import QrCodeLogin from '@/page/user/QrCodeLogin.vue'
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -20,6 +21,11 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/user/login',
     name: '用户登录',
     component: UserLoginPage,
+  },
+  {
+    path: '/user/qrcodeLogin',
+    name: '扫码登录',
+    component: QrCodeLogin,
   },
   {
     path: '/user/person',
