@@ -12,6 +12,7 @@ import SpaceManagePage from '@/page/admin/SpaceManagePage.vue'
 import AddSpacePage from '@/page/space/AddSpacePage.vue'
 import MySpacePage from '@/page/space/MySpacePage.vue'
 import SpaceDetailPage from '@/page/space/SpaceDetailPage.vue'
+import SearchPicturePage from '@/page/picture/SearchPicturePage.vue'
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -74,6 +75,11 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/add_picture',
     name: '创建图片',
     component: AddPicturePage,
+  },
+  {
+    path: '/search_picture',
+    name: '图片搜索',
+    component: SearchPicturePage,
   },
 
   {

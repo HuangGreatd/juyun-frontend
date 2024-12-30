@@ -7,6 +7,7 @@
         <a-button type="primary" :href="`/add_picture?spaceId=${id}`" target="_blank">
           + 创建图片
         </a-button>
+        <a-button :icon="h(EditOutlined)" @click="doBatchEdit"> 批量编辑</a-button>
         <a-tooltip
           :title="`占用空间 ${formatSize(space.totalSize)} / ${formatSize(space.maxSize)}`"
         >
@@ -19,6 +20,13 @@
       </a-space>
     </a-flex>
     <div style="margin-bottom: 16px" />
+    <!-- 搜索表单 -->
+    <PictureSearchForm :onSearch="onSearch" />
+    <div style="margin-bottom: 16px" />
+    <!-- 按颜色搜索，跟其他搜索条件独立 -->
+    <a-form-item label="按颜色搜索">
+      <color-picker format="hex" @pureColorChange="onColorChange" />
+    </a-form-item>
     <!-- 图片列表 -->
     <PictureList :dataList="dataList" :loading="loading" :showOp="true" :onReload="fetchData" />
     <!-- 分页 -->
@@ -29,15 +37,29 @@
       :total="total"
       @change="onPageChange"
     />
+    <BatchEditPictureModal
+      ref="batchEditPictureModalRef"
+      :spaceId="id"
+      :pictureList="dataList"
+      :onSuccess="onBatchEditPictureSuccess"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { h, onMounted, reactive, ref } from 'vue'
 import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
 import { message } from 'ant-design-vue'
-import { listPictureVoByPageUsingPost } from '@/api/pictureController.ts'
+import {
+  listPictureVoByPageUsingPost,
+  searchPictureByColorUsingPost,
+} from '@/api/pictureController.ts'
 import { formatSize } from '@/utils'
 import PictureList from '@/components/PictureList.vue'
+import PictureSearchForm from '@/components/PictureSearchForm.vue'
+import { ColorPicker } from 'vue3-colorpicker'
+import 'vue3-colorpicker/style.css'
+import BatchEditPictureModal from '@/components/BatchEditPictureModal.vue'
+import { EditOutlined } from '@ant-design/icons-vue'
 
 interface Props {
   id: string | number
@@ -75,16 +97,30 @@ const searchParams = reactive<API.PictureQueryRequest>({
   sortField: 'createTime',
   sortOrder: 'descend',
 })
-// 获取数据
+
+// 页面加载时获取数据，请求一次
+onMounted(() => {
+  fetchData()
+})
+// 分页参数
+const onPageChange = (newSearchParams: API.PictureQueryRequest) => {
+  searchParams.value = {
+    ...searchParams.value,
+    ...newSearchParams,
+    current: 1,
+  }
+  fetchData()
+}
+//获取数据
 const fetchData = async () => {
   loading.value = true
   // 转换搜索参数
   const params = {
     spaceId: props.id,
-    ...searchParams,
+    ...searchParams.value,
   }
   const res = await listPictureVoByPageUsingPost(params)
-  if (res.data.code === 0 && res.data.data) {
+  if (res.data.data) {
     dataList.value = res.data.data.records ?? []
     total.value = res.data.data.total ?? 0
   } else {
@@ -92,17 +128,35 @@ const fetchData = async () => {
   }
   loading.value = false
 }
-// 页面加载时获取数据，请求一次
-onMounted(() => {
-  fetchData()
-})
-// 分页参数
-const onPageChange = (page: number, pageSize: number) => {
-  searchParams.current = page
-  searchParams.pageSize = pageSize
+const onColorChange = async (color: string) => {
+  const res = await searchPictureByColorUsingPost({
+    picColor: color,
+    spaceId: props.id,
+  })
+  console.log(res)
+  if (res.data.code === 0 && res.data.data) {
+    const data = res.data.data ?? []
+    dataList.value = data
+    total.value = data.length
+  } else {
+    message.error('获取数据失败，' + res.data.message)
+  }
+}
+
+// ---- 批量编辑图片 -----
+const batchEditPictureModalRef = ref()
+// 批量编辑图片成功
+const onBatchEditPictureSuccess = () => {
   fetchData()
 }
+// 打开批量编辑图片弹窗
+const doBatchEdit = () => {
+  if (batchEditPictureModalRef.value) {
+    batchEditPictureModalRef.value.openModal()
+  }
+}
 </script>
+
 <style scoped>
 #spaceDetailPage {
   margin-bottom: 16px;
