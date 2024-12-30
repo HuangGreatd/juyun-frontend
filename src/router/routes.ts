@@ -1,6 +1,4 @@
-import type { Route } from 'ant-design-vue/es/breadcrumb/Breadcrumb'
 import type { RouteRecordRaw } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
 import HomePage from '@/page/HomePage.vue'
 import UserManagePage from '@/page/admin/UserManagePage.vue'
 import UserRegisterPage from '@/page/user/UserRegisterPage.vue'
@@ -10,6 +8,10 @@ import AddPicturePage from '@/page/picture/AddPicturePage.vue'
 import PictureManagePage from '@/page/admin/PictureManagePage.vue'
 import DetailPicturePage from '@/page/picture/DetailPicturePage.vue'
 import QrCodeLogin from '@/page/user/QrCodeLogin.vue'
+import SpaceManagePage from '@/page/admin/SpaceManagePage.vue'
+import AddSpacePage from '@/page/space/AddSpacePage.vue'
+import MySpacePage from '@/page/space/MySpacePage.vue'
+import SpaceDetailPage from '@/page/space/SpaceDetailPage.vue'
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -48,10 +50,32 @@ export const routes: Array<RouteRecordRaw> = [
     component: PictureManagePage,
   },
   {
-    path: '/picture/addPicture',
+    path: '/admin/spaceManage',
+    name: '空间管理',
+    component: SpaceManagePage,
+  },
+  {
+    path: '/add_space',
+    name: '创建空间',
+    component: AddSpacePage,
+  },
+  {
+    path: '/my_space',
+    name: '我的空间',
+    component: MySpacePage,
+  },
+  {
+    path: '/space/:id',
+    name: '空间详情',
+    component: SpaceDetailPage,
+    props: true,
+  },
+  {
+    path: '/add_picture',
     name: '创建图片',
     component: AddPicturePage,
   },
+
   {
     path: '/picture/:id',
     name: '图片详情',

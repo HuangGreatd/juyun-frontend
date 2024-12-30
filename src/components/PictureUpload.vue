@@ -21,10 +21,13 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import { uploadPictureUsingPost } from '@/api/fileController.ts'
+
 interface Props {
   picture?: API.PictureVO
+  spaceId?: number
   onSuccess?: (newPicture: API.PictureVO) => void
 }
+
 const props = defineProps<Props>()
 /**
  * 上传图片
@@ -33,7 +36,8 @@ const props = defineProps<Props>()
 const handleUpload = async ({ file }: any) => {
   loading.value = true
   try {
-    const params = props.picture ? { id: props.picture.id } : {}
+    const params: API.PictureUploadRequest = props.picture ? { id: props.picture.id } : {}
+    params.spaceId = props.spaceId
     const res = await uploadPictureUsingPost(params, {}, file)
     if (res.data.code === 0 && res.data.data) {
       message.success('图片上传成功')
@@ -61,7 +65,7 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
   }
   // 校验图片大小
   //todo
-  const isLt2M = file.size / 1024 / 1024 < 10
+  const isLt2M = file.size / 1024 / 1024 < 2
   if (!isLt2M) {
     message.error('不能上传超过 2M 的图片')
   }
@@ -75,14 +79,17 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
   min-width: 152px;
   min-height: 152px;
 }
+
 .picture-upload img {
   max-width: 100%;
   max-height: 480px;
 }
+
 .ant-upload-select-picture-card i {
   font-size: 32px;
   color: #999;
 }
+
 .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
   color: #666;
