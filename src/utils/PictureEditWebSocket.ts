@@ -13,10 +13,7 @@ export default class PictureEditWebSocket {
    * 初始化 WebSocket 连接
    */
   connect() {
-    const DEV_BASE_URL = "ws://localhost:8123";
-    // 线上地址
-    // const PROD_BASE_URL = "ws://81.69.229.63";
-    const url = `${DEV_BASE_URL}/api/ws/picture/edit?pictureId=${this.pictureId}`
+    const url = `ws://localhost:8123/api/ws/picture/edit?pictureId=${this.pictureId}`
     this.socket = new WebSocket(url)
 
     // 设置携带 cookie
